@@ -15,12 +15,20 @@ namespace MyntraTesting
     public class LoginTest
     {
         [Test]
-        public void TestMethod()
+        public void MyntraTitle()
         {
             InternetExplorerDriverService driverService = InternetExplorerDriverService.CreateDefaultService(@"D:\Setups\IEDriverServer_x64_3.14.0\");
             IWebDriver driver = new InternetExplorerDriver(driverService);
+            String strExpectedOutPut = "Online Shopping for Women, Men, Kids Fashion & Lifestyle - Myntra";
+           
             driver.Manage().Window.Maximize();
             driver.Url = "https://www.myntra.com";
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
+            //IWebElement title = driver.FindElement(By.TagName("title"));
+            String strTitle = driver.Title;
+            Console.WriteLine(strTitle);
+            Assert.AreEqual(strExpectedOutPut, strTitle);
+
 
             
         }
