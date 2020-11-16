@@ -22,7 +22,7 @@ namespace MyntraTesting
             String strExpectedOutPut = "Online Shopping for Women, Men, Kids Fashion & Lifestyle - Myntra";
            
             driver.Manage().Window.Maximize();
-            driver.Url = "https://www.myntra.com";
+            driver.Url = "https://www.myntra.comjkkhkkjl";
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
             //IWebElement title = driver.FindElement(By.TagName("title"));
             String strTitle = driver.Title;
