@@ -1,8 +1,12 @@
-﻿using BoDi;
+﻿using AventStack.ExtentReports;
+using BoDi;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
 using System;
 using System.Configuration;
+using DataDrivenProject;
+using NUnit.Framework;
+using TechTalk.SpecFlow;
 
 namespace MyntraTesting
 {
@@ -10,6 +14,8 @@ namespace MyntraTesting
     {
         public IWebDriver driver = null;
         private readonly IObjectContainer objectContainer;
+        ExtentReports rep = ExtentManager.getInstance();
+        ExtentTest test;
 
         public Webconnector(IObjectContainer objectContainer)
         {
@@ -24,8 +30,15 @@ namespace MyntraTesting
                 driver = new FirefoxDriver(driverService);
                 driver.Manage().Window.Maximize();
                 driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
+                info("Opening Browser");
+                
             }
             objectContainer.RegisterInstanceAs<IWebDriver>(driver);
+        }
+
+        public void info(string msg)
+        {
+            test.Log(Status.Info, msg);
         }
 
         public IWebDriver getDriver()
@@ -35,17 +48,19 @@ namespace MyntraTesting
 
         public void click(string objct)
         {
+            info("Clicking on" + objct);
             getElement(objct).Click();
         }
 
         public void type(string objct, string data)
         {
+            info("Typing in" + objct);
             getElement(objct).SendKeys(data);
         }
 
         public void navigate(string url)
         {
-           
+            info("Navigate to the - "+ url);
             driver.Url = ConfigurationManager.AppSettings[url];
         }
 
@@ -72,5 +87,31 @@ namespace MyntraTesting
                 e = driver.FindElement(By.ClassName(ConfigurationManager.AppSettings[objct]));
             return e;
         }
+
+        public void reportPass(String msg)
+        {
+            test.Log(Status.Pass, msg);
+        }
+
+        public void reportFail(string msg)
+        {
+            test.Log(Status.Fail, msg);
+            Assert.Fail(msg);
+        }
+
+        public void startTest(string testName)
+        {
+            test = rep.CreateTest(testName);
+        }
+
+        [AfterScenario]
+        public void quit()
+        {
+            if (rep != null)
+                rep.Flush();
+            if (driver != null)
+                driver.Quit();
+        }
+
     }
 }

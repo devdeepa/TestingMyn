@@ -25,6 +25,7 @@ namespace MyntraTesting.StepDefination
         [Given(@"I go to \""(.*)"" on \""(.*)""")]
         public void GivenIGoToHttpWww_Myntra_ComOnMozilla(String URL,String Browser)
         {
+            web.startTest(FeatureContext.Current.FeatureInfo.Title);
             web.openbrowser(Browser);
             web.navigate(URL);
             
@@ -53,8 +54,11 @@ namespace MyntraTesting.StepDefination
                 strActualResult = "Success";
             else
                 strActualResult = "Failure";
-            Assert.AreEqual(ExpectedResult, strActualResult);           
-
+            Assert.AreEqual(ExpectedResult, strActualResult);
+            if (ExpectedResult != strActualResult)
+                web.reportFail("Login Failed");
+            else
+                web.reportPass("Login Passed");
         }
 
     }
